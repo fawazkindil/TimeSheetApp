@@ -2,6 +2,12 @@
 @push('after-styles')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .fc-day-sat:not(.fc-col-header-cell),
+        .fc-day-sun:not(.fc-col-header-cell) {
+                background-color: lavenderblush !important;
+            }
+    </style>
 @endpush
 @section('content')
     <x-full-frame>
@@ -27,6 +33,9 @@
             var calendarEl = document.getElementById('calendar');
             calendar = new FullCalendar.Calendar(calendarEl, {
                     initialView: 'dayGridMonth',
+                    dayCellContent: function(args) {
+                        console.log(args);
+                    },
                     eventContent: function(args) {
                         let icon = document.createElement('i')
                         console.log(args.event.extendedProps.hour);
