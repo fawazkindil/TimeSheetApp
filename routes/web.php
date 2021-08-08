@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 Route::get('/login', function() {
     return redirect('/')->name('login');
 });
@@ -34,6 +34,9 @@ Route::middleware('auth')->group(function() {
 Route::get('/tasks', [TaskController::class, 'list'])->name('task.list');
 Route::get('/tasks/add', [TaskController::class, 'add'])->name('task.add');
 Route::post('/tasks/add', [TaskController::class, 'store'])->name('task.store');
+Route::post('/tasks/getEditData', [TaskController::class, 'getEditData'])->name('task.getEditData');
+Route::post('/tasks/updateTask', [TaskController::class, 'updateTask'])->name('task.updateTask');
+Route::post('/tasks/delete', [TaskController::class, 'delete'])->name('task.delete');
 
     // Event
     Route::post('/events/month', [EventController::class, 'getMonthEvents'])->name('event.month');

@@ -24,7 +24,9 @@
 </head>
 <body id="app">
     @include('sweetalert::alert')
-
+    <x-modal id="modal" style="display: none;">
+        @stack('modal')
+    </x-modal>
     @auth
     <div class="absolute top-0 right-0 p-4 font-semibold cursor-pointer">
         <form method="POST" action="{{ route('logout') }}">
@@ -51,5 +53,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="{{ mix('js/app.js') }}"></script>
+<script>
+    function toggleModal() {
+        $('#modal').toggle();
+    }
+</script>
 @stack('after-script')
 </html>

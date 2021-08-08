@@ -7,6 +7,9 @@
         .fc-day-sun:not(.fc-col-header-cell) {
                 background-color: lavenderblush !important;
             }
+        .fc-event{
+            cursor: pointer;
+        }
     </style>
 @endpush
 @section('content')
@@ -14,7 +17,7 @@
         <div class="text-2xl font-extrabold my-4">
             TIMESHEET
         </div>
-        <div id='calendar' class="w-full max-w-md rounded shadow border p-4 bg-white"></div>
+        <div id='calendar' class="w-full max-w-xl rounded shadow border p-4 bg-white"></div>
     </x-full-frame>
 @endsection
 @push('after-script')
@@ -33,12 +36,8 @@
             var calendarEl = document.getElementById('calendar');
             calendar = new FullCalendar.Calendar(calendarEl, {
                     initialView: 'dayGridMonth',
-                    dayCellContent: function(args) {
-                        console.log(args);
-                    },
                     eventContent: function(args) {
                         let icon = document.createElement('i')
-                        console.log(args.event.extendedProps.hour);
                         if(args.event.extendedProps.hour < 8) {
                             icon.classList.add('fas');
                             icon.classList.add('fa-thumbs-down');
@@ -50,15 +49,17 @@
                         let arrayOfDomNodes = [ icon ]
                         return { domNodes: arrayOfDomNodes }
                     },
-                    dateClick: function(info) {
-                        window.location.href = '{{route('task.list')}}' + '?date=' + info.dateStr;
-                    },
+                    // dateClick: function(info) {
+                    //     window.location.href = '{{route('task.list')}}' + '?date=' + info.dateStr;
+                    // },
                     eventClick: function(info) {
                         window.location.href = '{{route('task.list')}}' + '?date=' + moment(info.event.start).format('YYYY-MM-DD');
                     }
                 });
             today = moment();
             getMonthData(today);
+
+            calendar.render();
         });
 
         function toggleTaskModal() {
@@ -76,11 +77,9 @@
 
                 },
                 success: function(response) {
-                    console.log(response);
                     response.forEach(function(event) {
                         calendar.addEvent(event);
                     });
-                    calendar.render();
                     $('.fc-prev-button').off().click(function() {
                         calendar.getEvents().forEach(function(event) {
                             event.remove();

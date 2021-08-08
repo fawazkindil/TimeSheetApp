@@ -18,7 +18,7 @@ class EventController extends Controller
         $today = Carbon::parse($request->today);
         $endOfMonth = $today->copy()->endOfMonth();
         $today->startOfMonth();
-        while(! $endOfMonth->isSameDay($today)) {
+        while( $endOfMonth->isSameMonth($today)) {
             if(!$today->isWeekend()) {
                 $tasks = $user->tasks()->where('date', $today->toDateString())
                     ->get();

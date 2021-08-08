@@ -20,53 +20,8 @@
                     Add Task
                 </a>
             </div>
-            <div class="p-4 overflow-auto w-full">
-                <table class="w-full">
-                    <thead class="font-bold">
-                        <tr class="border-b-2 border-gray-600">
-                            <th>
-                                Description
-                            </th>
-                            <th>
-                                Time
-                            </th>
-                            <th>
-                                Action
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="">
-                        @forelse ($tasks as $task)
-                            <tr class="border-b border-gray-100">
-                                <td class="py-1">
-                                    {{$task->description}}
-                                </td>
-                                <td class="py-1">
-                                    <div class="flex flex-row items-center">
-                                        <div class="bg-blue-400 text-white text-xs rounded px-1 py-1 mb-1">
-                                            {{$task->hours . ' hours'}}
-                                        @if ($task->minutes !== 0)
-                                            <br>{{$task->minutes.' minutes'}}
-                                        @endif
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-1">
-                                    <div class="flex flex-row items-center">
-                                        <button type="button" class="px-1 border-2 border-green-500 rounded text-green-500">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button type="button" class="px-1 border-2 border-red-500 rounded text-red-500">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-
-                        @endforelse
-                    </tbody>
-                </table>
+            <div class="p-4 overflow-auto w-full" id="listDiv">
+                @include('task.partial.task-table', compact('tasks'))
             </div>
             {{-- <div>
                 <input type="number" step="1" min="1" max="8" name="hour" class="w-1/3 border border-gray-200 rounded px-2 py-1" placeholder="Hour">
@@ -75,10 +30,96 @@
         </div>
     </x-full-frame>
 @endsection
+
+@push('modal')
+    <div class="px-4 py-2">
+        <div class="text-center">
+            <div class="font-bold text-lg">Edit Task</div>
+            <input type="hidden" name="editId">
+            <input type="hidden" name="date" value="{{$date->toDateString()}}">
+            <span class="font-semibold text-sm">Hour</span>
+            <input type="number" step="1" min="1" max="8" name="hour" class="w-1/3 border border-gray-200 rounded px-2 py-1" placeholder="Hour">
+            <span class="font-semibold text-sm">Minute</span>
+            <input type="number" step="1" min="1" max="60" name="minute" class="w-1/3 border border-gray-200 rounded px-2 py-1" placeholder="Minute">
+        </div>
+        <textarea name="description" id="description" cols="30" rows="10" class="mt-2 w-full border border-gray-200 rounded px-2 py-1" placeholder="Task Description (optional)"></textarea>
+        <div class="text-center">
+            <button type="button"onclick="submitEditData();" class="px-2 py-1 bg-blue-600 hover:bg-blue-300 text-white hover:text-blue-900 rounded">Edit Task</button>
+        </div>
+    </div>
+@endpush
+
 @push('after-script')
     <script>
         $(document).ready(function() {
-
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
         });
+
+        function populateEditTask(id) {
+            $.ajax({
+                url: '{{route('task.getEditData')}}',
+                type: 'post',
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    $('input[name="hour"]').val(response.hours);
+                    $('input[name="minute"]').val(response.minutes);
+                    $('input[name="editId"]').val(response.id);
+                    $('textarea[name="description"]').val(response.description);
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });
+        }
+
+        function submitEditData() {
+            $.ajax({
+                url: '{{route('task.updateTask')}}',
+                type: 'post',
+                data: {
+                    id: $('input[name="editId"]').val(),
+                    hour: $('input[name="hour"]').val(),
+                    minute: $('input[name="minute"]').val(),
+                    description: $('textarea[name="description"]').val()
+                },
+                success: function(response) {
+                    if(response == 'OK') {
+                        window.location.reload();
+                    }
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });
+        }
+
+        function deleteTask(id) {
+            Swal.fire({
+                title: 'Confirm Deletion?',
+                showCancelButton: true,
+                confirmButtonText: `Delete`,
+            }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '{{route('task.delete')}}',
+                            type: 'post',
+                            data: {
+                                id: id
+                            },
+                            success: function(response) {
+                                window.location.reload();
+                            }
+                        });
+
+                    }
+                });
+        }
     </script>
 @endpush

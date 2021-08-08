@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -56,5 +57,35 @@ class TaskController extends Controller
         Alert::success('Saved', 'New Task Added');
 
         return redirect()->route('task.list', ['date' => $data['date']]);
+    }
+
+    public function getEditData(Request $request) {
+        $id = $request->id;
+        $task = Task::find($id);
+        return response()->json($task);
+    }
+
+    public function updateTask(Request $request) {
+        $id = $request->id;
+        $hour = $request->hour;
+        $minute = $request->minute;
+        $description = $request->description;
+
+        $task = Task::find($id);
+        $task->update([
+            'hours' =>  $hour,
+            'minutes'   =>  $minute,
+            'description'   => $description
+        ]);
+        Alert::success('Saved', 'Task Edited');
+        return response('OK');
+    }
+
+    public function delete(Request $request) {
+        $id = $request->id;
+        $task = Task::find($id);
+        $task->delete();
+        Alert::success('Deleted', 'Task Deleted');
+        return response('OK');
     }
 }
