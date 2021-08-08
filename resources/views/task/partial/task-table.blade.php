@@ -29,7 +29,7 @@
                     </div>
                 </td>
                 <td class="py-1">
-                    <div class="flex flex-row items-center">
+                    <div class="flex flex-row items-center justify-center">
                         <button type="button" class="px-1 border-2 border-green-500 rounded text-green-500" onclick="toggleModal();populateEditTask({{$task->id}});">
                             <i class="fas fa-edit"></i>
                         </button>

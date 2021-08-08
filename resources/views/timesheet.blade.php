@@ -80,32 +80,22 @@
                     response.forEach(function(event) {
                         calendar.addEvent(event);
                     });
-                    $('.fc-prev-button').off().click(function() {
-                        calendar.getEvents().forEach(function(event) {
-                            event.remove();
-                        });
-                        var date = moment(calendar.getDate().toISOString());
-                        getMonthData(date);
-                    });
-                    $('.fc-next-button').off().click(function() {
-                        calendar.getEvents().forEach(function(event) {
-                            event.remove();
-                        });
-                        var date = moment(calendar.getDate().toISOString());
-                        getMonthData(date);
-                    });
-                    $('.fc-today-button').off().click(function() {
-                        calendar.getEvents().forEach(function(event) {
-                            event.remove();
-                        });
-                        var date = moment(calendar.getDate().toISOString());
-                        getMonthData(date);
-                    });
+                    $('.fc-prev-button').off().click(handler);
+                    $('.fc-next-button').off().click(handler);
+                    $('.fc-today-button').off().click(handler);
                 },
                 error: function(response) {
                     console.log(response);
                 }
             });
+        }
+
+        function handler() {
+            calendar.getEvents().forEach(function(event) {
+                event.remove();
+            });
+            var date = moment(calendar.getDate().toISOString());
+            getMonthData(date);
         }
     </script>
 @endpush
