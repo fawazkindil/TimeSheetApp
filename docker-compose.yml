@@ -11,8 +11,8 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./src:/var/www/html
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./:/var/www/html
+      - ./nginx/:/etc/nginx/conf.d/
       - ./nginx/log:/var/log/nginx
     depends_on:
       - php
@@ -31,9 +31,9 @@ services:
       - ./mysql:/var/lib/mysql
     environment:
       MYSQL_DATABASE: timesheet_tmrd
-      MYSQL_USER: root
-      MYSQL_PASSWORD:
-      MYSQL_ROOT_PASSWORD:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: admin
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     networks:
@@ -46,28 +46,9 @@ services:
     container_name: php
     restart: unless-stopped
     volumes:
-      - ./src:/var/www/html
+      - ./:/var/www/html
     # ports:
     #   - "9000:9000"
-    networks:
-      - timesheetapp
-
-  composer:
-    image: composer
-    container_name: composer
-    volumes:
-      - ./src:/var/www/html
-    working_dir: /var/www/html
-    networks:
-      - timesheetapp
-
-  npm:
-    image: node:13.7
-    container_name: npm
-    volumes:
-      - ./src:/var/www/html
-    working_dir: /var/www/html
-    entrypoint: [ 'npm' ]
     networks:
       - timesheetapp
 
