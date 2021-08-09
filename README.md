@@ -74,11 +74,8 @@ git clone https://github.com/fawazkindil/TimeSheetApp.git
 cd TimeSheetApp
 cp .env.example.docker .env
 docker run -v $(pwd):/app composer install
-cd ./docker
 docker-compose up -d
 docker-compose exec php php artisan key:generate
-docker-compose exec php php artisan jwt:generate
 docker-compose exec php php artisan migrate
 docker-compose exec php php artisan db:seed
-docker-compose exec php php artisan serve --host=0.0.0.0
 ```
