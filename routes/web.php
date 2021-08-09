@@ -39,5 +39,6 @@ Route::post('/tasks/updateTask', [TaskController::class, 'updateTask'])->name('t
 Route::post('/tasks/delete', [TaskController::class, 'delete'])->name('task.delete');
 
     // Event
-    Route::post('/events/month', [EventController::class, 'getMonthEvents'])->name('event.month');
+Route::post('/events/month', [EventController::class, 'getMonthEvents'])->name('event.month');
+Route::post('/events/updateLeave', [EventController::class, 'updateLeave'])->name('event.updateLeave');
 });

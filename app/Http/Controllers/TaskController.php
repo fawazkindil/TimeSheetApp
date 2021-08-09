@@ -28,6 +28,10 @@ class TaskController extends Controller
         $compactValues[] = 'totalHours';
         $compactValues[] = 'totalMinutes';
 
+        $leave = $user->leaves()->where('date', $date->toDateString())->first();
+        $leaveType = $leave ? $leave->type : '';
+        $compactValues[] = 'leaveType';
+
         return view('task.list',compact($compactValues));
     }
 

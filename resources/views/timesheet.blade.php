@@ -38,10 +38,12 @@
                     initialView: 'dayGridMonth',
                     eventContent: function(args) {
                         let icon = document.createElement('i')
-                        if(args.event.extendedProps.hour < 8) {
+                        if(args.event.extendedProps.status == 'ONLEAVE') {
+                            icon.innerHTML = 'ON LEAVE';
+                        } else if(args.event.extendedProps.hour < args.event.extendedProps.req_hour) {
                             icon.classList.add('fas');
                             icon.classList.add('fa-thumbs-down');
-                            args.event.color = '#ffff';
+                            // args.event.color = '#ffff';
                         } else {
                             icon.classList.add('fas');
                             icon.classList.add('fa-thumbs-up');

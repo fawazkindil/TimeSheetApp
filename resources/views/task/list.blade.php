@@ -10,12 +10,21 @@
         </div>
         <div class="w-full max-w-md rounded shadow border p-4 bg-white">
             <div class="text-xl font-bold">
-                {{$date->format('l')}}, {{$date->format('d / m / Y')}} ({{$totalHours}} {{Illuminate\Support\Str::plural('Hour', $totalHours)}}@if($totalMinutes !== 0) {{$totalMinutes}} {{Illuminate\Support\Str::plural('Minute', $totalMinutes)}}@endif)
+                {{$date->format('l')}}, {{$date->format('d / m / Y')}} ( {{$totalHours}} {{Illuminate\Support\Str::plural('Hour', $totalHours)}}@if($totalMinutes !== 0) {{$totalMinutes}} {{Illuminate\Support\Str::plural('Minute', $totalMinutes)}}@endif )
             </div>
             <div class="flex flex-row justify-between items-center my-2">
                 <p class="font-semibold">
                     Researcher : {{Auth::user()->name}}
                 </p>
+                <div class="flex flex-col text-sm font-semibold">
+                    <input type="hidden" name="date" value="{{$date->format('Y-m-d')}}">
+                    <label class="inline-flex items-center mt-3">
+                        <input type="checkbox" name="leave[]" value="full" @if($leaveType == 'full') checked @endif class="form-checkbox h-5 w-5 text-gray-600"><span class="ml-2 text-gray-700">On Leave</span>
+                    </label>
+                    <label class="inline-flex items-center mt-3">
+                        <input type="checkbox" name="leave[]" value="half" @if($leaveType == 'half') checked @endif class="form-checkbox h-5 w-5 text-gray-600"><span class="ml-2 text-gray-700">Half Day</span>
+                    </label>
+                </div>
                 <a href="{{route('task.add')}}{{'?date='.$date->format('Y-m-d')}}" class="border-2 border-blue-500 hover:bg-blue-600 hover:text-white rounded text-blue-500 px-2">
                     Add Task
                 </a>
@@ -23,10 +32,6 @@
             <div class="p-4 overflow-auto w-full" id="listDiv">
                 @include('task.partial.task-table', compact('tasks'))
             </div>
-            {{-- <div>
-                <input type="number" step="1" min="1" max="8" name="hour" class="w-1/3 border border-gray-200 rounded px-2 py-1" placeholder="Hour">
-                <input type="number" step="1" min="1" max="60" name="minute" class="w-1/3 border border-gray-200 rounded px-2 py-1" placeholder="Minute">
-            </div> --}}
         </div>
     </x-full-frame>
 @endsection
@@ -51,13 +56,59 @@
 
 @push('after-script')
     <script>
+        var timeOut;
+        var timer;
         $(document).ready(function() {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+            $('input[name="leave[]"]').click(function() {
+                var checked = $(this).prop('checked');
+                $('input[name="leave[]"]').prop('checked', false);
+                if(checked) {
+                    $(this).prop('checked', true);
+                } else {
+                    $(this).prop('checked', false);
+                }
+                submitLeave();
+            });
         });
+
+        function submitLeave() {
+            if(timeOut) {
+                clearTimeout(timer);
+            }
+            timeOut = true;
+            timer = setTimeout((() => {
+                $.ajax({
+                    url: '{{route('event.updateLeave')}}',
+                    type: 'post',
+                    data: {
+                        date: $('input[name="date"]').val(),
+                        type: $('input[name="leave[]"]:checked').val()
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            titleText: 'Leave Saved',
+                            text: '',
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false,
+                            showCloseButton: true,
+                        });
+                        timeOut = false;
+                        console.log(response);
+                    },
+                    error: function() {
+                        console.log(response);
+                    }
+                });
+            }),500);
+        }
 
         function populateEditTask(id) {
             $.ajax({
@@ -105,21 +156,22 @@
                 showCancelButton: true,
                 confirmButtonText: `Delete`,
             }).then((result) => {
-                    /* Read more about isConfirmed, isDenied below */
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: '{{route('task.delete')}}',
-                            type: 'post',
-                            data: {
-                                id: id
-                            },
-                            success: function(response) {
-                                window.location.reload();
-                            }
-                        });
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '{{route('task.delete')}}',
+                        type: 'post',
+                        data: {
+                            id: id
+                        },
+                        success: function(response) {
+                            window.location.reload();
+                        }
+                    });
 
-                    }
-                });
+                }
+            });
         }
+
     </script>
 @endpush
