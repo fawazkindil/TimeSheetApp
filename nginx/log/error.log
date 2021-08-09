@@ -112,3 +112,17 @@
 2021/08/09 12:01:05 [crit] 1#1: pread() "/etc/nginx/conf.d/default.conf" failed (21: Is a directory)
 2021/08/09 12:02:06 [crit] 1#1: pread() "/etc/nginx/conf.d/default.conf" failed (21: Is a directory)
 2021/08/09 12:03:08 [crit] 1#1: pread() "/etc/nginx/conf.d/default.conf" failed (21: Is a directory)
+2021/08/09 13:18:17 [notice] 1#1: using the "epoll" event method
+2021/08/09 13:18:17 [notice] 1#1: nginx/1.20.1
+2021/08/09 13:18:17 [notice] 1#1: built by gcc 10.2.1 20201203 (Alpine 10.2.1_pre1) 
+2021/08/09 13:18:17 [notice] 1#1: OS: Linux 5.10.16.3-microsoft-standard-WSL2
+2021/08/09 13:18:17 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2021/08/09 13:18:17 [notice] 1#1: start worker processes
+2021/08/09 13:18:17 [notice] 1#1: start worker process 32
+2021/08/09 13:18:17 [notice] 1#1: start worker process 33
+2021/08/09 13:18:17 [notice] 1#1: start worker process 34
+2021/08/09 13:18:17 [notice] 1#1: start worker process 35
+2021/08/09 13:18:17 [notice] 1#1: start worker process 36
+2021/08/09 13:18:17 [notice] 1#1: start worker process 37
+2021/08/09 13:18:17 [notice] 1#1: start worker process 38
+2021/08/09 13:18:17 [notice] 1#1: start worker process 39

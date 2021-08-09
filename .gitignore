@@ -4,6 +4,8 @@
 /public/storage
 /storage/*.key
 /vendor
+mysql/*
+nginx/log/*
 .env
 .env.backup
 .phpunit.result.cache
