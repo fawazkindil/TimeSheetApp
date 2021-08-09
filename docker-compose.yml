@@ -58,7 +58,7 @@ services:
       dockerfile: Dockerfile
     container_name: artisan
     volumes:
-      - ./src:/var/www/html
+      - ./:/var/www/html
     depends_on:
       - mysql
     entrypoint: [ 'php', '/var/www/html/artisan' ]
