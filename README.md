@@ -17,7 +17,7 @@ Switch to the repo folder
 
     cd TimeSheetApp
 
-Install all the dependencies using composer
+Install all the dependencies using [composer](https://getcomposer.org/download/)
 
     composer install
 
