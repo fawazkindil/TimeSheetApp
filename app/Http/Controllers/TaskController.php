@@ -51,6 +51,16 @@ class TaskController extends Controller
         ]);
 
         $user = Auth::user();
+
+        $tasks = $user->tasks()->where('date', $data['date'])->get();
+        if($tasks) {
+            $sumHours = $tasks->sum('hours') + ($data['hour'] == null ? 0 : $data['hour']);
+            if($sumHours > 24) {
+                Alert::error('Tasks\' total hours exceeding 24 Hours!');
+                return redirect(route('task.add'))->withInput($request->input());
+            }
+        }
+
         $user->tasks()->create([
             'date'  =>  $data['date'],
             'hours'  =>  $data['hour'] == null ? 0 : $data['hour'],
@@ -92,4 +102,5 @@ class TaskController extends Controller
         Alert::success('Deleted', 'Task Deleted');
         return response('OK');
     }
+
 }
