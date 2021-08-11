@@ -73,6 +73,7 @@ To install with [Docker](https://www.docker.com), run following commands:
 git clone https://github.com/fawazkindil/TimeSheetApp.git
 cd TimeSheetApp
 cp .env.example.docker .env
+docker-comopse build
 docker run -v $(pwd):/app composer install
 docker-compose up -d
 docker-compose exec php php artisan key:generate
